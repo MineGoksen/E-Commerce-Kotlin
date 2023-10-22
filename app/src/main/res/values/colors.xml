@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="cornflowerblue">#6495ED</color>
+    <color name="darkslategray">#2F4F4F</color>
+    <color name="midnightblue">#191970</color>
+    <color name="mediumblue">#0000CD</color>
+    <color name="darkblue">#00008B</color>
+
+
+    <color name="tomato">#FF6347</color>
+
+
+
+
+
+</resources>
