@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="8dp">
+
+    <!-- Kredi Kartı Sahibi Adı Input Alanı -->
+
+    <!-- Kredi Kartı Numarası Input Alanı -->
+
+    <EditText
+        android:id="@+id/editTextCardholderName"
+        android:layout_width="0dp"
+        android:layout_height="56dp"
+        android:hint="Kart Sahibinin Adı"
+        app:layout_constraintBottom_toTopOf="@+id/editTextCardNumber"
+        app:layout_constraintEnd_toEndOf="@+id/editTextCardNumber"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/editTextCardNumber" />
+
+    <EditText
+        android:id="@+id/editTextCardNumber"
+        android:layout_width="0dp"
+        android:layout_height="56dp"
+        android:hint="Kredi Kartı Numarası"
+        android:maxLength="16"
+        app:layout_constraintEnd_toEndOf="@+id/linearLayoutCardDetails"
+        app:layout_constraintStart_toStartOf="@+id/linearLayoutCardDetails"
+        app:layout_constraintTop_toBottomOf="@id/editTextCardholderName" />
+
+    <!-- Kredi Kartı Tarih Bilgisi ve CVC Input Alanları için Bir Alt Layout -->
+    <LinearLayout
+        android:id="@+id/linearLayoutCardDetails"
+        android:layout_width="0dp"
+        android:layout_height="56dp"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/editTextCardNumber">
+
+        <!-- Kredi Kartı Ayı Input Alanı -->
+        <EditText
+            android:id="@+id/editTextCardExpiryMonth"
+            android:layout_width="0dp"
+            android:layout_height="56dp"
+            android:layout_weight="1"
+            android:hint="Ay"
+            android:maxLength="2" />
+
+        <!-- Kredi Kartı Yılı Input Alanı -->
+        <EditText
+            android:id="@+id/editTextCardExpiryYear"
+            android:layout_width="0dp"
+            android:layout_height="56dp"
+            android:layout_weight="1"
+            android:hint="Yıl"
+            android:maxLength="4" />
+
+        <!-- CVC Input Alanı -->
+        <EditText
+            android:id="@+id/editTextCvc"
+            android:layout_width="0dp"
+            android:layout_height="56dp"
+            android:layout_weight="1"
+            android:hint="CVC"
+            android:maxLength="3" />
+    </LinearLayout>
+
+    <!-- Adres Bilgisi Input Alanı -->
+    <EditText
+        android:id="@+id/editTextAddress"
+        android:layout_width="0dp"
+        android:layout_height="56dp"
+        android:hint="Adres Bilgisi"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/linearLayoutCardDetails" />
+
+    <ImageView
+        android:id="@+id/ic_odeme_back"
+        android:layout_width="35dp"
+        android:layout_height="31dp"
+        android:layout_marginEnd="32dp"
+        android:src="@drawable/ic_back_button"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_odeme"
+        app:layout_constraintEnd_toStartOf="@+id/tv_odeme"
+        app:layout_constraintHorizontal_bias="0.17"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/tv_odeme"
+        app:layout_constraintVertical_bias="0.0"
+        app:tint="@color/darkslategray" />
+
+    <TextView
+        android:id="@+id/tv_odeme"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:layout_marginEnd="136dp"
+        android:layout_marginBottom="104dp"
+        android:text="ÖDEME"
+        android:textColor="@color/darkslategray"
+        android:textSize="26dp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/editTextCardholderName"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.947" />
+
+    <Button
+        android:id="@+id/btn_onayla"
+        android:layout_width="133dp"
+        android:layout_height="51dp"
+        android:backgroundTint="@color/darkslategray"
+        android:text="Onayla"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editTextAddress" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

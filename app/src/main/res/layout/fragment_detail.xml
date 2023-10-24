@@ -6,13 +6,25 @@
     android:layout_height="match_parent"
     android:padding="8dp">
 
+    <RatingBar
+        android:id="@+id/ratingBar"
+        android:scaleX="0.5"
+        android:scaleY="0.5"
+        android:layout_width="248dp"
+        android:layout_height="46dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintEnd_toEndOf="@+id/tv_price"
+        app:layout_constraintStart_toStartOf="@+id/tv_title"
+        app:layout_constraintTop_toBottomOf="@+id/tv_title" />
+
     <ImageView
         android:id="@+id/iv_product"
         android:layout_width="207dp"
         android:layout_height="198dp"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="28dp"
         android:scaleType="centerInside"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.549"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_detay"
         tools:srcCompat="@tools:sample/avatars" />
@@ -21,13 +33,15 @@
         android:id="@+id/tv_title"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="12dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="12dp"
         android:gravity="center"
         android:text="Product Name"
         android:textSize="20sp"
         android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/tv_price"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/iv_product" />
 
@@ -35,22 +49,22 @@
         android:id="@+id/tv_price"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="12dp"
-        android:layout_marginTop="12dp"
+        android:layout_marginEnd="16dp"
         android:gravity="center"
         android:text="Price: $99.99"
         android:textColor="@color/tomato"
         android:textSize="18sp"
         android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_title"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_title" />
+        app:layout_constraintTop_toTopOf="@+id/tv_title"
+        app:layout_constraintVertical_bias="0.0" />
 
     <TextView
         android:id="@+id/tv_description"
         android:layout_width="352dp"
         android:layout_height="150dp"
-        android:layout_marginBottom="44dp"
+        android:layout_marginBottom="36dp"
         android:text="Product Description. This is a sample product description text."
         android:textSize="14sp"
         app:layout_constraintBottom_toTopOf="@+id/btn_AddToChart"
@@ -62,12 +76,11 @@
         android:id="@+id/btn_AddToChart"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="60dp"
+        android:layout_marginStart="52dp"
+        android:layout_marginBottom="80dp"
         android:backgroundTint="@color/darkslategray"
         android:text="Sepete Ekle"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.506"
         app:layout_constraintStart_toStartOf="parent" />
 
     <ImageView
@@ -99,16 +112,26 @@
         android:id="@+id/textView3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="16dp"
+        android:layout_marginBottom="8dp"
         android:text="Kitap Detayı"
         android:textColor="@color/darkslategray"
         android:textSize="22dp"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/tv_description"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/tv_price"
-        app:layout_constraintTop_toBottomOf="@+id/tv_price"
-        app:layout_constraintVertical_bias="0.87" />
+        app:layout_constraintHorizontal_bias="0.014"
+        app:layout_constraintStart_toStartOf="@+id/tv_title" />
+
+    <Button
+        android:id="@+id/btn_add_fav"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Favorilere Ekle"
+        android:backgroundTint="@color/darkslategray"
+        app:layout_constraintBottom_toBottomOf="@+id/btn_AddToChart"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.423"
+        app:layout_constraintStart_toEndOf="@+id/btn_AddToChart"
+        app:layout_constraintTop_toTopOf="@+id/btn_AddToChart"
+        app:layout_constraintVertical_bias="1.0" />
 </androidx.constraintlayout.widget.ConstraintLayout>

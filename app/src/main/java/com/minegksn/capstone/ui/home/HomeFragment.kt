@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.View
 import android.widget.Toast
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
 import retrofit2.Response
 import com.minegksn.capstone.MainApplication
@@ -22,6 +23,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
     private val binding by viewBinding(FragmentHomeBinding::bind)
     private lateinit var auth: FirebaseAuth
+    lateinit var bottomNav : BottomNavigationView
 
     private val productAdapter = ProductsAdapter(onProductClick = ::onProductClick)
 
@@ -37,14 +39,24 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             rvProducts.adapter = productAdapter
             // Oturum Kapat düğmesinin tıklanma işlemi
 
-            btnLogout.setOnClickListener {
-                FirebaseAuth.getInstance().signOut() // Oturumu kapat
-                findNavController().navigate(R.id.homeToLogin)
-                // Oturum kapatıldıktan sonra yapılacak işlemleri burada ekleyebilirsiniz.
-            }
+            bottomNav.setOnItemSelectedListener{
+                when (it.itemId) {
+                    R.id.cart -> {
+                        findNavController().navigate(R.id.homeToCart)
+                        true
+                    }
+                    R.id.fav -> {
+                        findNavController().navigate(R.id.homeToFav)
+                        true
+                    }
+                    R.id.logout -> {
+                        FirebaseAuth.getInstance().signOut() // Oturumu kapat
+                        findNavController().navigate(R.id.homeToLogin)
+                        true
+                    }
 
-            btnCart.setOnClickListener {
-                findNavController().navigate(R.id.homeToCart)
+                    else -> { false }
+                }
             }
 
         }

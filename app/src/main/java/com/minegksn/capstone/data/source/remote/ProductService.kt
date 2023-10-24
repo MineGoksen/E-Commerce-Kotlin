@@ -2,6 +2,10 @@ package com.minegksn.capstone.data.source.remote
 
 import com.minegksn.capstone.data.model.AddToCartRequest
 import com.minegksn.capstone.data.model.AddToChartResponse
+import com.minegksn.capstone.data.model.ClearCartRequest
+import com.minegksn.capstone.data.model.ClearCartResponse
+import com.minegksn.capstone.data.model.DeleteFromCartRequest
+import com.minegksn.capstone.data.model.DeleteFromCartResponse
 import com.minegksn.capstone.data.model.GetCartProductDetail
 import com.minegksn.capstone.data.model.GetProductDetailResponse
 import com.minegksn.capstone.data.model.GetProductsResponse
@@ -29,6 +33,17 @@ interface ProductService {
 
     @POST("add_to_cart.php")
     fun addChart(@Body request: AddToCartRequest): Call<AddToChartResponse>
+
+    @POST("delete_from_cart.php")
+    fun deleteFromCart(
+        @Body request: DeleteFromCartRequest
+    ): Call<DeleteFromCartResponse>
+
+    @POST("clear_cart.php")
+    fun clearCart(
+        @Body request: ClearCartRequest
+    ): Call<ClearCartResponse>
+
 
 
 }

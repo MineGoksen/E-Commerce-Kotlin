@@ -31,6 +31,9 @@
         <action
             android:id="@+id/homeToCart"
             app:destination="@id/bagFragment" />
+        <action
+            android:id="@+id/homeToFav"
+            app:destination="@id/favoriteFragment" />
     </fragment>
     <fragment
         android:id="@+id/splashFragment"
@@ -65,5 +68,33 @@
         <action
             android:id="@+id/bagToDetail"
             app:destination="@id/detailFragment" />
+        <action
+            android:id="@+id/bagToPayment"
+            app:destination="@id/paymentFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/favoriteFragment"
+        android:name="com.minegksn.capstone.ui.fav.FavoriteFragment"
+        android:label="FavoriteFragment" >
+        <action
+            android:id="@+id/favToDetail"
+            app:destination="@id/detailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/paymentFragment"
+        android:name="com.minegksn.capstone.ui.payment.PaymentFragment"
+        android:label="PaymentFragment" >
+        <action
+            android:id="@+id/paymentToSuccess"
+            app:destination="@id/succesFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/succesFragment"
+        android:name="com.minegksn.capstone.ui.payment.SuccesFragment"
+        android:label="fragment_succes"
+        tools:layout="@layout/fragment_succes" >
+        <action
+            android:id="@+id/successToHome"
+            app:destination="@id/homeFragment" />
     </fragment>
 </navigation>

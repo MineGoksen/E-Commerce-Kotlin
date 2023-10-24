@@ -13,6 +13,12 @@ import com.google.firebase.auth.FirebaseAuth
 import com.minegksn.capstone.MainApplication
 import com.minegksn.capstone.R
 import com.minegksn.capstone.common.viewBinding
+import com.minegksn.capstone.data.model.AddToCartRequest
+import com.minegksn.capstone.data.model.AddToChartResponse
+import com.minegksn.capstone.data.model.ClearCartRequest
+import com.minegksn.capstone.data.model.ClearCartResponse
+import com.minegksn.capstone.data.model.DeleteFromCartRequest
+import com.minegksn.capstone.data.model.DeleteFromCartResponse
 import com.minegksn.capstone.data.model.GetCartProductDetail
 import com.minegksn.capstone.databinding.FragmentBagBinding
 import com.minegksn.capstone.ui.home.HomeFragmentDirections
@@ -35,9 +41,25 @@ class BagFragment : Fragment(R.layout.fragment_bag) {
         getProducts()
 
         with(binding) {
+            ivEmpty.visibility = View.INVISIBLE
+            rvCart.visibility = View.VISIBLE
+
             rvCart.adapter = cartsAdapter
             rvCart.adapter = cartsAdapter
             rvCart.adapter = cartsAdapter
+
+            icCartBack.setOnClickListener {
+                findNavController().navigateUp()
+            }
+
+            btnSatNAl.setOnClickListener {
+                findNavController().navigate(R.id.bagToPayment)
+            }
+
+            tvClear.setOnClickListener {
+                clearAllCart()
+            }
+
         }
     }
 
@@ -57,7 +79,9 @@ class BagFragment : Fragment(R.layout.fragment_bag) {
                     if (result?.status == 200) {
                         cartsAdapter.submitList(result.products.orEmpty())
                     } else {
-                        Toast.makeText(requireContext(), "Bir hata OLDU.", Toast.LENGTH_SHORT)
+                        binding.rvCart.visibility = View.INVISIBLE
+                        binding.ivEmpty.visibility = View.VISIBLE
+                        Toast.makeText(requireContext(), "Sepetini Boş!", Toast.LENGTH_SHORT)
                             .show()
 
                     }
@@ -70,12 +94,77 @@ class BagFragment : Fragment(R.layout.fragment_bag) {
         }
     }
 
+    private fun clearAllCart(){
+        val user = auth.currentUser
+        if (user != null) {
+            val uid = user.uid
+            val request = ClearCartRequest(uid)
+
+            val clearCartCall = MainApplication.productService?.clearCart(
+                request
+            )
+
+            clearCartCall?.enqueue(object : Callback<ClearCartResponse> {
+                override fun onResponse(
+                    call: Call<ClearCartResponse>,
+                    response: Response<ClearCartResponse>
+                ) {
+                    val result = response.body()
+
+                    if (result?.status == 200) {
+                        getProducts()
+                        cartsAdapter.notifyDataSetChanged()
+                        val message = "Ürünleriniz silindi." // Göstermek istediğiniz mesaj
+                        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+
+
+                    } else {
+                        Toast.makeText(requireContext(), result?.message, Toast.LENGTH_SHORT).show()
+                    }
+                }
+
+                override fun onFailure(call: Call<ClearCartResponse>, t: Throwable) {
+                    Log.e("ClearCartResponse", t.message.orEmpty())
+                }
+            })
+        }
+    }
+
     private fun onProductClick(id: Int) {
         findNavController().navigate(BagFragmentDirections.bagToDetail(id))
     }
 
     private fun onProductDeleteClick(id: Int) {
+        val request = DeleteFromCartRequest(id = id)
 
+        // Sepete ürün eklemek için userId'yi kullan
+        val deleteCartCall = MainApplication.productService?.deleteFromCart(
+            request
+        )
+
+        deleteCartCall?.enqueue(object : Callback<DeleteFromCartResponse> {
+            override fun onResponse(
+                call: Call<DeleteFromCartResponse>,
+                response: Response<DeleteFromCartResponse>
+            ) {
+                val result = response.body()
+
+                if (result?.status == 200) {
+                    getProducts()
+                    cartsAdapter.notifyDataSetChanged()
+                    val message = "Ürün silindi." // Göstermek istediğiniz mesaj
+                    Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+
+
+                } else {
+                    Toast.makeText(requireContext(), result?.message, Toast.LENGTH_SHORT).show()
+                }
+            }
+
+            override fun onFailure(call: Call<DeleteFromCartResponse>, t: Throwable) {
+                Log.e("AddToChartResponse", t.message.orEmpty())
+            }
+        })
     }
 
 }

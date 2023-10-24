@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
@@ -16,7 +17,9 @@ import com.minegksn.capstone.common.viewBinding
 import com.minegksn.capstone.data.model.AddToCartRequest
 import com.minegksn.capstone.data.model.AddToChartResponse
 import com.minegksn.capstone.data.model.GetProductDetailResponse
+import com.minegksn.capstone.data.roomdb.FavoriteProduct
 import com.minegksn.capstone.databinding.FragmentDetailBinding
+import com.minegksn.capstone.ui.fav.FavViewModel
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -25,6 +28,7 @@ import retrofit2.Response
 class DetailFragment : Fragment(R.layout.fragment_detail) {
 
     private val binding by viewBinding(FragmentDetailBinding::bind)
+    private val favViewModel by lazy { FavViewModel(requireContext()) }
     private lateinit var auth: FirebaseAuth
 
     private val args by navArgs<DetailFragmentArgs>()
@@ -59,6 +63,25 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
                             tvTitle.text = it.title
                             tvPrice.text = "${it.price} ₺"
                             tvDescription.text = it.description
+                            ratingBar.rating = it.rate?.toFloat()!!
+                        }
+
+                        btnAddFav.setOnClickListener {
+                            val favoriteProduct = FavoriteProduct(
+                                id,
+                                result.product.title,
+                                result.product.price,
+                                result.product.description,
+                                result.product.category,
+                                result.product.imageOne,
+                                result.product.imageTwo,
+                                result.product.imageThree,
+                                result.product.rate,
+                                result.product.count,
+                                result.product.saleState)
+
+
+                            favViewModel.insertFavoriteProduct(favoriteProduct)
                         }
 
                         btnAddToChart.setOnClickListener {
