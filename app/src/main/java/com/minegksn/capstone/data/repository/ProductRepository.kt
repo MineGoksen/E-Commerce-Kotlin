@@ -1,48 +1,108 @@
 package com.minegksn.capstone.data.repository
 
-import android.content.Context
-import androidx.lifecycle.MutableLiveData
-import com.minegksn.capstone.data.roomdb.FavoriteProduct
-import com.minegksn.capstone.data.roomdb.FavoriteProductDao
-import com.minegksn.capstone.data.roomdb.FavoriteProductDatabase
+import com.minegksn.capstone.common.Resource
+import com.minegksn.capstone.data.mapper.mapToProductListUI
+import com.minegksn.capstone.data.mapper.mapToProductUI
+import com.minegksn.capstone.data.model.AddToCartRequest
+import com.minegksn.capstone.data.model.ClearCartRequest
+import com.minegksn.capstone.data.model.DeleteFromCartRequest
+import com.minegksn.capstone.data.model.response.AddToChartResponse
+import com.minegksn.capstone.data.model.response.ClearCartResponse
+import com.minegksn.capstone.data.model.response.DeleteFromCartResponse
+import com.minegksn.capstone.data.model.response.ProductListUI
+import com.minegksn.capstone.data.model.response.ProductUI
+import com.minegksn.capstone.data.source.remote.ProductService
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
+class ProductRepository(private val productService: ProductService) {
 
-class ProductRepository(context: Context) {
+    suspend fun getProducts(): Resource<List<ProductListUI>> =
+        withContext(Dispatchers.IO) {
+            try {
+                val response = productService.getProducts().body()
 
-    var isLoading = MutableLiveData<Boolean>()
-    var isProductAddedBasket = MutableLiveData<Boolean>()
-    var productBasketList = MutableLiveData<List<FavoriteProduct>>()
-
-    private val productFavDAOInterface: FavoriteProductDao? =
-        FavoriteProductDatabase.productFavRoomDatabase(context)?.userDao()
-
-    fun productFav() {
-        isLoading.value = true
-        productFavDAOInterface?.getAll()?.let {
-            productBasketList.value = it
-            isLoading.value = false
-        } ?: run {
-            isLoading.value = false
-        }
-    }
-
-    fun addProductToFav(productModel: FavoriteProduct) {
-        productFavDAOInterface?.getProductNamesFav()?.let {
-            isProductAddedBasket.value = if (it.contains(productModel.title).not()) {
-                productFavDAOInterface.addProductFav(productModel)
-                true
-            } else {
-                false
+                if (response?.status == 200) {
+                    Resource.Success(response.products.orEmpty().mapToProductListUI())
+                } else {
+                    Resource.Fail(response?.message.orEmpty())
+                }
+            } catch (e: Exception) {
+                Resource.Error(e.message.orEmpty())
             }
         }
-    }
 
-    fun deleteProductFromFav(productId: Int) {
-        productFavDAOInterface?.deleteProductWithId(productId)
-    }
+    suspend fun getProductDetail(id: Int): Resource<ProductUI> =
+        withContext(Dispatchers.IO) {
+            try {
+                val response = productService.getProductDetail(id).body()
 
-    fun clearFav() {
-        productFavDAOInterface?.clearFav()
-    }
+                if (response?.status == 200 && response.product != null) {
+                    Resource.Success(response.product.mapToProductUI())
+                } else {
+                    Resource.Fail(response?.message.orEmpty())
+                }
+            } catch (e: Exception) {
+                Resource.Error(e.message.orEmpty())
+            }
+        }
 
+    suspend fun getCartProducts(userId: String): Resource<List<ProductListUI>> =
+        withContext(Dispatchers.IO) {
+            try {
+                val response = productService.getCartProduct(userId).body()
+
+                if (response?.status == 200) {
+                    Resource.Success(response.products.orEmpty().mapToProductListUI())
+                } else {
+                    Resource.Fail(response?.message.orEmpty())
+                }
+            } catch (e: Exception) {
+                Resource.Error(e.message.orEmpty())
+            }
+        }
+
+
+    suspend fun clearAllCart(userId: String): Resource<ClearCartResponse> =
+        withContext(Dispatchers.IO) {
+            try {
+                val response = productService.clearCart(ClearCartRequest(userId))
+                if (response.isSuccessful) {
+                    Resource.Success(response.body()!!)
+                } else {
+                    Resource.Error(response.message())
+                }
+            } catch (e: Exception) {
+                Resource.Error(e.message.orEmpty())
+            }
+        }
+
+    suspend fun deleteProductFromCart(productId: Int): Resource<DeleteFromCartResponse> =
+        withContext(Dispatchers.IO) {
+            try {
+                val response = productService.deleteFromCart(DeleteFromCartRequest(productId))
+                if (response.isSuccessful) {
+                    Resource.Success(response.body()!!)
+                } else {
+                    Resource.Error(response.message())
+                }
+            } catch (e: Exception) {
+                Resource.Error(e.message.orEmpty())
+            }
+        }
+
+
+    suspend fun addToCart(request: AddToCartRequest): Resource<AddToChartResponse> =
+        withContext(Dispatchers.IO) {
+            try {
+                val response = productService.addChart(request)
+                if (response.isSuccessful) {
+                    Resource.Success(response.body()!!)
+                } else {
+                    Resource.Error(response.message())
+                }
+            } catch (e: Exception) {
+                Resource.Error(e.message.orEmpty())
+            }
+        }
 }

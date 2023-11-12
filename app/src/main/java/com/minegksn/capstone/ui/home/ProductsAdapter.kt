@@ -6,14 +6,15 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.minegksn.capstone.data.model.Product
+import com.minegksn.capstone.data.model.response.Product
+import com.minegksn.capstone.data.model.response.ProductListUI
 import com.minegksn.capstone.databinding.ItemProductBinding
 
 //import com.minegksn.capstone.databinding.ItemProductBinding
 
 class ProductsAdapter(
     private val onProductClick: (Int) -> Unit
-) : ListAdapter<Product, ProductsAdapter.ProductViewHolder>(ProductDiffUtilCallBack()) {
+) : ListAdapter<ProductListUI, ProductsAdapter.ProductViewHolder>(ProductDiffUtilCallBack()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProductViewHolder {
         return ProductViewHolder(
@@ -29,7 +30,7 @@ class ProductsAdapter(
         private val onProductClick: (Int) -> Unit
     ) : RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(product: Product) {
+        fun bind(product: ProductListUI) {
             with(binding) {
                 tvTitle.text = product.title
                 tvPrice.text = "${product.price} ₺"
@@ -37,19 +38,18 @@ class ProductsAdapter(
                 Glide.with(ivProduct).load(product.imageOne).into(ivProduct)
 
                 root.setOnClickListener {
-                    onProductClick(product.id ?: 1)
+                    onProductClick(product.id)
                 }
-
             }
         }
     }
 
-    class ProductDiffUtilCallBack : DiffUtil.ItemCallback<Product>() {
-        override fun areItemsTheSame(oldItem: Product, newItem: Product): Boolean {
+    class ProductDiffUtilCallBack : DiffUtil.ItemCallback<ProductListUI>() {
+        override fun areItemsTheSame(oldItem: ProductListUI, newItem: ProductListUI): Boolean {
             return oldItem.id == newItem.id
         }
 
-        override fun areContentsTheSame(oldItem: Product, newItem: Product): Boolean {
+        override fun areContentsTheSame(oldItem: ProductListUI, newItem: ProductListUI): Boolean {
             return oldItem == newItem
         }
     }

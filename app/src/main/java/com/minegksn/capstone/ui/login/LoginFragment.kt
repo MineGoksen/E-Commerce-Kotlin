@@ -3,61 +3,62 @@ package com.minegksn.capstone.ui.login
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.View
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.minegksn.capstone.R
 import com.minegksn.capstone.common.viewBinding
 import com.minegksn.capstone.databinding.FragmentLoginBinding
+import dagger.hilt.android.AndroidEntryPoint
+import java.util.concurrent.TimeUnit
 
+@AndroidEntryPoint
 class LoginFragment : Fragment(R.layout.fragment_login) {
 
     private val binding by viewBinding(FragmentLoginBinding::bind)
 
-    private lateinit var auth: FirebaseAuth
+    private val viewModel by viewModels<LoginViewModel>()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        auth = FirebaseAuth.getInstance()
-
-        auth.currentUser?.let {
-            findNavController().navigate(R.id.loginToHome)
-        }
-
         with(binding) {
 
             btnSignIn.setOnClickListener {
-                val email = etEmail.text.toString()
-                val password = etPassword.text.toString()
-
-                if (checkFields(email, password)) {
-                    signIn(email, password)
-                }
+                viewModel.signIn(
+                    etEmail.text.toString(),
+                    etPassword.text.toString()
+                )
             }
 
-            btnSignUp.setOnClickListener{
+            btnSignUp.setOnClickListener {
                 findNavController().navigate(R.id.loginToSignUp)
             }
         }
+
+        observeData()
     }
 
-    private fun checkFields(email: String, password: String): Boolean {
-        return when {
-            email.isEmpty() -> false
-            password.isEmpty() -> false
-            password.length < 6 -> false
-            else -> true
+    private fun observeData() = with(binding) {
+        viewModel.signInState.observe(viewLifecycleOwner) { state ->
+            when (state) {
+                //TODO: Add progress bar.
+                SignInState.Loading -> {
+                    TimeUnit.SECONDS.sleep(1L)
+                }
+
+                is SignInState.GoToHome -> {
+
+                    findNavController().navigate(R.id.loginToHome)
+                }
+
+                is SignInState.ShowPopUp -> {
+                    Snackbar.make(requireView(), state.errorMessage, 1000).show()
+                }
+
+                else -> {Snackbar.make(requireView(), "ALO error occured", 1000).show()}
+            }
         }
     }
-
-    private fun signIn(email: String, password: String) {
-        auth.signInWithEmailAndPassword(email, password).addOnSuccessListener {
-            findNavController().navigate(R.id.loginToHome)
-        }.addOnFailureListener {
-            Snackbar.make(requireView(), it.message.orEmpty(), 1000).show()
-        }
-    }
-
-
 }

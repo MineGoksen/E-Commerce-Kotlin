@@ -1,4 +1,6 @@
-package com.minegksn.capstone.data.model
+package com.minegksn.capstone.data.model.response
+
+import com.minegksn.capstone.data.model.response.Product
 
 data class GetProductDetailResponse(
     val product: Product?,
