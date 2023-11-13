@@ -24,7 +24,7 @@
         tools:listitem="@layout/item_cart" />
 
     <ImageView
-        android:id="@+id/ic_cart_back"
+        android:id="@+id/ic_fav_back"
         android:layout_width="35dp"
         android:layout_height="31dp"
         android:layout_marginStart="16dp"
@@ -42,11 +42,11 @@
         android:textColor="@color/darkslategray"
         android:textSize="26dp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/ic_cart_back"
+        app:layout_constraintBottom_toBottomOf="@+id/ic_fav_back"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.407"
-        app:layout_constraintStart_toEndOf="@+id/ic_cart_back"
-        app:layout_constraintTop_toTopOf="@+id/ic_cart_back"
+        app:layout_constraintStart_toEndOf="@+id/ic_fav_back"
+        app:layout_constraintTop_toTopOf="@+id/ic_fav_back"
         app:layout_constraintVertical_bias="0.0" />
 
     <Button

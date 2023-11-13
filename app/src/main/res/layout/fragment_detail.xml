@@ -76,11 +76,11 @@
         android:id="@+id/btn_AddToChart"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="52dp"
         android:layout_marginBottom="80dp"
         android:backgroundTint="@color/darkslategray"
         android:text="Sepete Ekle"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
     <ImageView
@@ -122,16 +122,4 @@
         app:layout_constraintHorizontal_bias="0.014"
         app:layout_constraintStart_toStartOf="@+id/tv_title" />
 
-    <Button
-        android:id="@+id/btn_add_fav"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Favorilere Ekle"
-        android:backgroundTint="@color/darkslategray"
-        app:layout_constraintBottom_toBottomOf="@+id/btn_AddToChart"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.423"
-        app:layout_constraintStart_toEndOf="@+id/btn_AddToChart"
-        app:layout_constraintTop_toTopOf="@+id/btn_AddToChart"
-        app:layout_constraintVertical_bias="1.0" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,4 +1,4 @@
-package com.minegksn.capstone.ui.home
+package com.minegksn.capstone.ui.favorites
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -8,29 +8,30 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.minegksn.capstone.data.model.response.Product
 import com.minegksn.capstone.data.model.response.ProductListUI
+import com.minegksn.capstone.databinding.ItemFavProductBinding
 import com.minegksn.capstone.databinding.ItemProductBinding
 
 //import com.minegksn.capstone.databinding.ItemProductBinding
 
-class ProductsAdapter(
+class FavoritesAdapter(
     private val onProductClick: (Int) -> Unit,
-    private val onFavClick: (ProductListUI) -> Unit
-) : ListAdapter<ProductListUI, ProductsAdapter.ProductViewHolder>(ProductDiffUtilCallBack()) {
+    private val onDeleteClick: (ProductListUI) -> Unit
+) : ListAdapter<ProductListUI, FavoritesAdapter.FavProductViewHolder>(FavProductDiffUtilCallBack()) {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProductViewHolder {
-        return ProductViewHolder(
-            ItemProductBinding.inflate(LayoutInflater.from(parent.context), parent, false),
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FavProductViewHolder {
+        return FavProductViewHolder(
+            ItemFavProductBinding.inflate(LayoutInflater.from(parent.context), parent, false),
             onProductClick,
-            onFavClick
+            onDeleteClick
         )
     }
 
-    override fun onBindViewHolder(holder: ProductViewHolder, position: Int) = holder.bind(getItem(position))
+    override fun onBindViewHolder(holder: FavProductViewHolder, position: Int) = holder.bind(getItem(position))
 
-    class ProductViewHolder(
-        private val binding: ItemProductBinding,
+    class FavProductViewHolder(
+        private val binding: ItemFavProductBinding,
         private val onProductClick: (Int) -> Unit,
-        private val onFavClick: (ProductListUI) -> Unit
+        private val onDeleteClick: (ProductListUI) -> Unit
     ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(product: ProductListUI) {
@@ -44,14 +45,14 @@ class ProductsAdapter(
                     onProductClick(product.id)
                 }
 
-                ivFavorite.setOnClickListener {
-                    onFavClick(product)
+                ivDeleteFav.setOnClickListener {
+                    onDeleteClick(product)
                 }
             }
         }
     }
 
-    class ProductDiffUtilCallBack : DiffUtil.ItemCallback<ProductListUI>() {
+    class FavProductDiffUtilCallBack : DiffUtil.ItemCallback<ProductListUI>() {
         override fun areItemsTheSame(oldItem: ProductListUI, newItem: ProductListUI): Boolean {
             return oldItem.id == newItem.id
         }

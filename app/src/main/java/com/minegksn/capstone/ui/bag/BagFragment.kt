@@ -46,7 +46,7 @@ class BagFragment : Fragment(R.layout.fragment_bag) {
             rvCart.visibility = View.VISIBLE
             rvCart.adapter = cartAdapter
 
-            icCartBack.setOnClickListener {
+            icFavBack.setOnClickListener {
                 findNavController().navigateUp()
             }
 

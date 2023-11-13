@@ -1,4 +1,4 @@
-package com.minegksn.capstone.ui.home
+package com.minegksn.capstone.ui.favorites
 
 import android.os.Bundle
 import android.util.Log
@@ -14,11 +14,17 @@ import com.google.firebase.auth.FirebaseAuth
 import retrofit2.Response
 import com.minegksn.capstone.MainApplication
 import com.minegksn.capstone.R
+import com.minegksn.capstone.common.gone
 import com.minegksn.capstone.common.viewBinding
 import com.minegksn.capstone.data.model.response.GetProductsResponse
 import com.minegksn.capstone.data.model.SearchProduct
 import com.minegksn.capstone.data.model.response.ProductListUI
+import com.minegksn.capstone.databinding.FragmentFavoritesBinding
 import com.minegksn.capstone.databinding.FragmentHomeBinding
+import com.minegksn.capstone.ui.favorites.FavoritesState
+import com.minegksn.capstone.ui.favorites.FavoritesViewModel
+import com.minegksn.capstone.ui.favorites.FavoritesFragmentDirections
+import com.minegksn.capstone.ui.home.ProductsAdapter
 import com.minegksn.capstone.ui.login.SignInState
 import dagger.hilt.android.AndroidEntryPoint
 import retrofit2.Call
@@ -27,71 +33,48 @@ import java.util.concurrent.TimeUnit
 
 
 @AndroidEntryPoint
-class HomeFragment : Fragment(R.layout.fragment_home) {
+class FavoritesFragment : Fragment(R.layout.fragment_favorites) {
 
-    private val binding by viewBinding(FragmentHomeBinding::bind)
+    private val binding by viewBinding(FragmentFavoritesBinding::bind)
     private lateinit var auth: FirebaseAuth
+    private val viewModel by viewModels<FavoritesViewModel>()
 
-    private val productAdapter = ProductsAdapter(onProductClick = ::onProductClick, onFavClick = ::onFavClick)
-    private val viewModel by viewModels<HomeViewModel>()
+    private val favoritesAdapter = FavoritesAdapter(onProductClick = ::onProductClick, onDeleteClick = ::onDeleteClick)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         auth = FirebaseAuth.getInstance()
-        viewModel.getProducts()
+        viewModel.getFavorites()
 
         with(binding) {
-            rvProducts.adapter = productAdapter
-
-            // Oturum Kapat düğmesinin tıklanma işlemi
-
-            bottomNav.setOnItemSelectedListener{
-                when (it.itemId) {
-                    R.id.cart -> {
-                        findNavController().navigate(R.id.homeToCart)
-                        true
-                    }
-                    R.id.fav -> {
-                        findNavController().navigate(R.id.homeToFav)
-                        true
-                    }
-                    R.id.logout -> {
-                        FirebaseAuth.getInstance().signOut() // Oturumu kapat
-                        findNavController().navigate(R.id.homeToLogin)
-                        true
-                    }
-
-                    else -> { false }
-                }
+            rvFavProducts.adapter = favoritesAdapter
+            icFavBack.setOnClickListener {
+                findNavController().navigateUp()
             }
-
         }
 
-        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
-            requireActivity().finish()
-        }
         observeData()
     }
 
 
 
     private fun observeData() = with(binding) {
-        viewModel.homeState.observe(viewLifecycleOwner) { state ->
+        viewModel.favoritesState.observe(viewLifecycleOwner) { state ->
             when (state) {
                 //TODO: Add progress bar.
-                HomeState.Loading -> {
+                FavoritesState.Loading -> {
                     TimeUnit.SECONDS.sleep(1L)
                 }
 
-                is HomeState.SuccessState -> {
-                    productAdapter.submitList(state.products)
+                is FavoritesState.SuccessState -> {
+                    favoritesAdapter.submitList(state.products)
                 }
 
-                is HomeState.EmptyScreen -> {
-
+                is FavoritesState.EmptyScreen -> {
+                    rvFavProducts.gone()
                 }
 
-                is HomeState.ShowPopUp -> {
+                is FavoritesState.ShowPopUp -> {
                     Snackbar.make(requireView(), state.errorMessage, 1000).show()
                 }
 
@@ -101,10 +84,10 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     }
 
     private fun onProductClick(id: Int) {
-        findNavController().navigate(HomeFragmentDirections.homeToDetail(id))
+        findNavController().navigate(FavoritesFragmentDirections.favToDetail(id))
     }
 
-    private fun onFavClick(product: ProductListUI) {
-        viewModel.addToFavorites(product)
+    private fun onDeleteClick(product: ProductListUI) {
+        viewModel.deleteFromFavorites(product)
     }
 }

@@ -31,6 +31,10 @@ class HomeViewModel @Inject constructor(
         }
     }
 
+    fun addToFavorites(product: ProductListUI) = viewModelScope.launch{
+        productRepository.addToFavorites(product)
+    }
+
     fun logOut() {
         authRepository.logOut()
         _homeState.value = HomeState.GoToSignIn

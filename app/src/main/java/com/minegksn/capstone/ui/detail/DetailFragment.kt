@@ -74,6 +74,7 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
                     tvTitle.text = state.product.title
                     tvPrice.text = "${state.product.price} ₺"
                     tvDescription.text = state.product.description
+                    ratingBar.rating = state.product.rate.toFloat()
                 }
                 is DetailState.ShowPopUp -> {
                     Snackbar.make(requireView(), state.errorMessage, 1000).show()
