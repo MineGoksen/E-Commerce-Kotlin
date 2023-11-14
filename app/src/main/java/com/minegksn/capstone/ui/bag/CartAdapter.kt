@@ -47,6 +47,7 @@ class CartAdapter(
                     ivDelete.setOnClickListener {
                         onProductDeleteClick(product.id)
                     }
+
                 }
             }
         }

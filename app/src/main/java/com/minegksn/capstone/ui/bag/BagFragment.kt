@@ -42,8 +42,6 @@ class BagFragment : Fragment(R.layout.fragment_bag) {
 
 
         with(binding) {
-            ivEmpty.visibility = View.INVISIBLE
-            rvCart.visibility = View.VISIBLE
             rvCart.adapter = cartAdapter
 
             icFavBack.setOnClickListener {

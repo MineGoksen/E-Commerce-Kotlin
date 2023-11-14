@@ -47,7 +47,7 @@ class SignUpFragment : Fragment(R.layout.fragment_sign_up) {
                     Snackbar.make(requireView(), state.errorMessage, 1000).show()
                 }
 
-                else -> {Snackbar.make(requireView(), "error occured", 1000).show()}
+                else -> {Snackbar.make(requireView(), "Kullanıcı ekleme başarılı.", 1000).show()}
             }
         }
     }

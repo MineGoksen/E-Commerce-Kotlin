@@ -6,10 +6,7 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "fav_products")
 data class ProductEntity(
-    @PrimaryKey(autoGenerate = true)
-    @ColumnInfo(name = "id")
-    val id: Int ?= null,
-
+    @PrimaryKey
     @ColumnInfo(name = "productId")
     val productId: Int?,
 

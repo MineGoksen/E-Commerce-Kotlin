@@ -13,7 +13,6 @@ import com.minegksn.capstone.data.model.response.GetProductDetailResponse
 import com.minegksn.capstone.data.model.response.GetProductsResponse
 import com.minegksn.capstone.data.model.GetSaleProducts
 import com.minegksn.capstone.data.model.SearchProduct
-import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -59,7 +58,7 @@ interface ProductService {
 
     @GET("search_product.php")
     suspend fun searchProduct(
-        @Query("query") query: String
+        @Query("query") query: Query
     ): Response<SearchProduct>
 
     @GET("get_categories.php")

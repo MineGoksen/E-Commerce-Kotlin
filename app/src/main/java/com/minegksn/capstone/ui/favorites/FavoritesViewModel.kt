@@ -37,15 +37,10 @@ class FavoritesViewModel @Inject constructor(
     }
 
 
-    fun logOut() {
-        authRepository.logOut()
-        _favoritesState.value = FavoritesState.GoToSignIn
-    }
 }
 
 sealed interface FavoritesState {
     object Loading : FavoritesState
-    object GoToSignIn : FavoritesState
     data class SuccessState(val products: List<ProductListUI>) : FavoritesState
     data class EmptyScreen(val failMessage: String) : FavoritesState
     data class ShowPopUp(val errorMessage: String) : FavoritesState

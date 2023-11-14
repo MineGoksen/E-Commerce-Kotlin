@@ -8,16 +8,17 @@ import com.minegksn.capstone.data.mapper.mapToProductUI
 import com.minegksn.capstone.data.model.AddToCartRequest
 import com.minegksn.capstone.data.model.ClearCartRequest
 import com.minegksn.capstone.data.model.DeleteFromCartRequest
+import com.minegksn.capstone.data.model.SearchProduct
 import com.minegksn.capstone.data.model.response.AddToChartResponse
 import com.minegksn.capstone.data.model.response.ClearCartResponse
 import com.minegksn.capstone.data.model.response.DeleteFromCartResponse
-import com.minegksn.capstone.data.model.response.ProductEntity
 import com.minegksn.capstone.data.model.response.ProductListUI
 import com.minegksn.capstone.data.model.response.ProductUI
 import com.minegksn.capstone.data.source.local.ProductDao
 import com.minegksn.capstone.data.source.remote.ProductService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import retrofit2.http.Query
 
 class ProductRepository(
     private val productService: ProductService,
@@ -121,6 +122,7 @@ class ProductRepository(
         productDao.deleteProduct(productUI.mapToProductEntity())
 
     }
+
     suspend fun getFavorites(): Resource<List<ProductListUI>> =
         withContext(Dispatchers.IO) {
             try{
@@ -134,4 +136,21 @@ class ProductRepository(
                 Resource.Error(e.message.orEmpty())
             }
         }
+
+    suspend fun searchProduct(query: Query): Resource<List<ProductListUI>> =
+        withContext(Dispatchers.IO) {
+            try {
+                val response = productService.searchProduct(query).body()
+                if (response?.status == 200) {
+                    Resource.Success(response.products.orEmpty().mapProductToProductListUI())
+                } else {
+                    Resource.Fail(response?.message.orEmpty())
+                }
+            } catch (e: Exception) {
+                Resource.Error(e.message.orEmpty())
+            }
+        }
+
+
+
 }

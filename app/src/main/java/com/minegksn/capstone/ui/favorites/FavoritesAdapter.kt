@@ -40,7 +40,6 @@ class FavoritesAdapter(
                 tvPrice.text = "${product.price} ₺"
 
                 Glide.with(ivProduct).load(product.imageOne).into(ivProduct)
-
                 root.setOnClickListener {
                     onProductClick(product.id)
                 }
