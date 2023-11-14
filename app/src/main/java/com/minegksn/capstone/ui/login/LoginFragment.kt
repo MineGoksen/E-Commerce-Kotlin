@@ -37,7 +37,19 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
             }
         }
 
+        checkIfUserIsAuthenticated()
+
         observeData()
+    }
+
+    private fun checkIfUserIsAuthenticated() {
+        val firebaseAuth = FirebaseAuth.getInstance()
+        val currentUser = firebaseAuth.currentUser
+
+        if (currentUser != null) {
+            // User is already authenticated, navigate to the home screen
+            findNavController().navigate(R.id.loginToHome)
+        }
     }
 
     private fun observeData() = with(binding) {

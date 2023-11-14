@@ -60,6 +60,9 @@
         <action
             android:id="@+id/signUpToLogin"
             app:destination="@id/loginFragment" />
+        <action
+            android:id="@+id/signupToHome"
+            app:destination="@id/homeFragment" />
     </fragment>
     <fragment
         android:id="@+id/bagFragment"

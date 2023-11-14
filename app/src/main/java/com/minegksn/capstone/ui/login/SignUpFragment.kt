@@ -40,7 +40,7 @@ class SignUpFragment : Fragment(R.layout.fragment_sign_up) {
             when (state) {
 
                 is SignUpState.GoToHome -> {
-                    findNavController().navigate(R.id.signUpToLogin)
+                    findNavController().navigate(R.id.signupToHome)
                 }
 
                 is SignUpState.ShowPopUp -> {
