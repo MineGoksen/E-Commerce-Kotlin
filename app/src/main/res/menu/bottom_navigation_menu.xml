@@ -1,19 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@+id/cart"
+        android:id="@+id/bagFragment"
         android:icon="@drawable/ic_cart"
         android:title="Sepet" />
     <item
-        android:id="@+id/home"
+        android:id="@+id/homeFragment"
         android:icon="@drawable/ic_home"
         android:title="Ana Sayfa" />
     <item
-        android:id="@+id/fav"
+        android:id="@+id/favoritesFragment"
         android:icon="@drawable/ic_favorite"
         android:title="Favoriler" />
     <item
-        android:id="@+id/logout"
+        android:id="@+id/searchFragment"
+        android:icon="@drawable/ic_search"
+        android:title="Arama" />
+    <item
+        android:id="@+id/loginFragment"
         android:icon="@drawable/ic_log_out"
         android:title="Çıkış Yap" />
 </menu>

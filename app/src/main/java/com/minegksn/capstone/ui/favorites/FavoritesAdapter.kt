@@ -37,7 +37,11 @@ class FavoritesAdapter(
         fun bind(product: ProductListUI) {
             with(binding) {
                 tvTitle.text = product.title
-                tvPrice.text = "${product.price} ₺"
+                if(!product.saleState) {
+                    tvPrice.text = "${product.price} ₺"
+                } else {
+                    tvPrice.text = "ON SALE ${product.salePrice} ₺"
+                }
 
                 Glide.with(ivProduct).load(product.imageOne).into(ivProduct)
                 root.setOnClickListener {

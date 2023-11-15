@@ -11,7 +11,9 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.minegksn.capstone.MainApplication
 import com.minegksn.capstone.R
+import com.minegksn.capstone.common.gone
 import com.minegksn.capstone.common.viewBinding
+import com.minegksn.capstone.common.visible
 import com.minegksn.capstone.data.model.ClearCartRequest
 import com.minegksn.capstone.data.model.response.ClearCartResponse
 import com.minegksn.capstone.data.model.DeleteFromCartRequest
@@ -19,6 +21,7 @@ import com.minegksn.capstone.data.model.response.DeleteFromCartResponse
 import com.minegksn.capstone.data.model.response.GetCartProductDetail
 import com.minegksn.capstone.databinding.FragmentBagBinding
 import com.minegksn.capstone.ui.detail.DetailState
+import com.minegksn.capstone.ui.home.SaleState
 import dagger.hilt.android.AndroidEntryPoint
 import retrofit2.Call
 import retrofit2.Callback
@@ -56,7 +59,6 @@ class BagFragment : Fragment(R.layout.fragment_bag) {
                 clearAllCart()
             }
 
-
         }
     }
 
@@ -68,25 +70,36 @@ class BagFragment : Fragment(R.layout.fragment_bag) {
                 when (state) {
                     //TODO: Add progress bar.
                     CartState.Loading -> {
-                        TimeUnit.SECONDS.sleep(1L)
+                        progressBar.visible()
+                        tvAmount.gone()
                     }
 
                     is CartState.SuccessState -> {
+                        progressBar.gone()
+                        tvAmount.visible()
+                        ivEmptyShop.gone()
                         cartAdapter.submitList(state.products)
                     }
 
                     is CartState.EmptyScreen -> {
-                        //progressBar.gone()
+                        progressBar.gone()
+                        tvAmount.gone()
+                        rvCart.gone()
+                        ivEmptyShop.visible()
                     }
 
                     is CartState.ShowPopUp -> {
-                        //progressBar.gone()
+                        progressBar.gone()
                         Snackbar.make(requireView(), state.errorMessage, 1000).show()
                     }
 
                     else -> {Snackbar.make(requireView(), "error occur in bag", 1000).show()}
                 }
             }
+        }
+
+        viewModel.totalPriceAmount.observe(viewLifecycleOwner) { amount->
+            tvAmount.text = String.format("₺ %.2f", amount)
         }
     }
 

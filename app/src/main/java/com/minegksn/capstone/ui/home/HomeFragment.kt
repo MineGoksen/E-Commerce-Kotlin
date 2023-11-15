@@ -10,8 +10,11 @@ import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.minegksn.capstone.R
+import com.minegksn.capstone.common.gone
 import com.minegksn.capstone.common.viewBinding
+import com.minegksn.capstone.common.visible
 import com.minegksn.capstone.data.model.response.ProductListUI
+import com.minegksn.capstone.data.model.response.ProductUI
 import com.minegksn.capstone.databinding.FragmentHomeBinding
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.concurrent.TimeUnit
@@ -25,52 +28,21 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     private lateinit var auth: FirebaseAuth
 
     private val productAdapter = ProductsAdapter(onProductClick = ::onProductClick, onFavClick = ::onFavClick)
-    private val searchAdapter = SearchAdapter(onProductClick = ::onProductClick)
     private val viewModel by viewModels<HomeViewModel>()
-    private val viewModel_s by viewModels<SearchViewModel>()
+
+    private val saleAdapter = SaleAdapter(onProductClick = ::onProductClick, onFavClick = ::onFavClick)
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         auth = FirebaseAuth.getInstance()
         viewModel.getProducts()
+        viewModel.getSaleProducts()
 
 
         with(binding) {
             rvProducts.adapter = productAdapter
-            rvSearch.adapter = searchAdapter
-
-            // Oturum Kapat düğmesinin tıklanma işlemi
-            /*searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-                override fun onQueryTextSubmit(query: String?): Boolean {
-                    viewModel_s.getSearch(query)
-                    return false
-                }
-
-                override fun onQueryTextChange(newText: String?): Boolean {
-
-                    return false
-                }
-            })*/
-
-            bottomNav.setOnItemSelectedListener{
-                when (it.itemId) {
-                    R.id.cart -> {
-                        findNavController().navigate(R.id.homeToCart)
-                        true
-                    }
-                    R.id.fav -> {
-                        findNavController().navigate(R.id.homeToFav)
-                        true
-                    }
-                    R.id.logout -> {
-                        FirebaseAuth.getInstance().signOut() // Oturumu kapat
-                        findNavController().navigate(R.id.homeToLogin)
-                        true
-                    }
-
-                    else -> { false }
-                }
-            }
+            rvSaleProducts.adapter = saleAdapter
 
         }
 
@@ -85,26 +57,47 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     private fun observeData() = with(binding) {
         viewModel.homeState.observe(viewLifecycleOwner) { state ->
             when (state) {
-                //TODO: Add progress bar.
-                HomeState.Loading -> {
-                    TimeUnit.SECONDS.sleep(1L)
-                }
+                HomeState.Loading -> progressBar.visible()
 
                 is HomeState.SuccessState -> {
+                    progressBar.gone()
                     productAdapter.submitList(state.products)
                 }
 
                 is HomeState.EmptyScreen -> {
+                    progressBar.gone()
 
                 }
 
                 is HomeState.ShowPopUp -> {
+                    progressBar.gone()
                     Snackbar.make(requireView(), state.errorMessage, 1000).show()
                 }
 
                 else -> {Snackbar.make(requireView(), "error occured", 1000).show()}
             }
         }
+
+        viewModel.saleState.observe(viewLifecycleOwner) { it ->
+            when (it) {
+                SaleState.Loading -> progressBar.visible()
+
+                is SaleState.SuccessState -> {
+                    progressBar.gone()
+                    saleAdapter.submitList(it.products)
+                }
+
+                is SaleState.EmptyScreen -> {
+                    progressBar.gone()
+                }
+
+                is SaleState.ShowPopUp -> {
+                    progressBar.gone()
+                    Snackbar.make(requireView(), it.errorMessage, 1000).show()
+                }
+            }
+        }
+
     }
 
     private fun onProductClick(id: Int) {

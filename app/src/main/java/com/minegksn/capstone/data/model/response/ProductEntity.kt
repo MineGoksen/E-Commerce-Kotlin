@@ -16,6 +16,12 @@ data class ProductEntity(
     @ColumnInfo(name = "price")
     val price: Double?,
 
+    @ColumnInfo(name = "salePrice")
+    val salePrice: Double?,
+
+    @ColumnInfo(name = "saleState")
+    val saleState: Boolean?,
+
     @ColumnInfo(name = "imageOne")
     val imageOne: String?,
 

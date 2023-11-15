@@ -72,9 +72,14 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
                 is DetailState.SuccessState -> {
                     Glide.with(ivProduct).load(state.product.imageOne).into(ivProduct)
                     tvTitle.text = state.product.title
-                    tvPrice.text = "${state.product.price} ₺"
                     tvDescription.text = state.product.description
                     ratingBar.rating = state.product.rate.toFloat()
+
+                    if (state.product.saleState) {
+                        tvPrice.text = "${state.product.salePrice} ₺"
+                    } else {
+                        tvPrice.text = "${state.product.price} ₺"
+                    }
                 }
                 is DetailState.ShowPopUp -> {
                     Snackbar.make(requireView(), state.errorMessage, 1000).show()

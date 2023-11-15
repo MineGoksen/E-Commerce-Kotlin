@@ -8,18 +8,21 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.minegksn.capstone.data.model.response.Product
 import com.minegksn.capstone.data.model.response.ProductListUI
+import com.minegksn.capstone.data.model.response.ProductUI
 import com.minegksn.capstone.databinding.ItemProductBinding
+import com.minegksn.capstone.databinding.ItemSaleProductBinding
 
 //import com.minegksn.capstone.databinding.ItemProductBinding
 
-class ProductsAdapter(
+
+class SaleAdapter(
     private val onProductClick: (Int) -> Unit,
     private val onFavClick: (ProductListUI) -> Unit
-) : ListAdapter<ProductListUI, ProductsAdapter.ProductViewHolder>(ProductDiffUtilCallBack()) {
+) : ListAdapter<ProductUI, SaleAdapter.ProductViewHolder>(SaleProductDiffUtilCallBack()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProductViewHolder {
         return ProductViewHolder(
-            ItemProductBinding.inflate(LayoutInflater.from(parent.context), parent, false),
+            ItemSaleProductBinding.inflate(LayoutInflater.from(parent.context), parent, false),
             onProductClick,
             onFavClick
         )
@@ -28,19 +31,16 @@ class ProductsAdapter(
     override fun onBindViewHolder(holder: ProductViewHolder, position: Int) = holder.bind(getItem(position))
 
     class ProductViewHolder(
-        private val binding: ItemProductBinding,
+        private val binding: ItemSaleProductBinding,
         private val onProductClick: (Int) -> Unit,
         private val onFavClick: (ProductListUI) -> Unit
     ) : RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(product: ProductListUI) {
+        fun bind(product: ProductUI) {
             with(binding) {
                 tvTitle.text = product.title
-                if(!product.saleState) {
-                    tvPrice.text = "${product.price} ₺"
-                } else {
-                    tvPrice.text = "${product.salePrice} ₺"
-                }
+                tvPrice.text = "${product.price} ₺"
+                tvSalePrice.text = "${product.salePrice} ₺"
 
                 Glide.with(ivProduct).load(product.imageOne).into(ivProduct)
 
@@ -48,19 +48,16 @@ class ProductsAdapter(
                     onProductClick(product.id)
                 }
 
-                ivFavorite.setOnClickListener {
-                    onFavClick(product)
-                }
             }
         }
     }
 
-    class ProductDiffUtilCallBack : DiffUtil.ItemCallback<ProductListUI>() {
-        override fun areItemsTheSame(oldItem: ProductListUI, newItem: ProductListUI): Boolean {
+    class SaleProductDiffUtilCallBack : DiffUtil.ItemCallback<ProductUI>() {
+        override fun areItemsTheSame(oldItem: ProductUI, newItem: ProductUI): Boolean {
             return oldItem.id == newItem.id
         }
 
-        override fun areContentsTheSame(oldItem: ProductListUI, newItem: ProductListUI): Boolean {
+        override fun areContentsTheSame(oldItem: ProductUI, newItem: ProductUI): Boolean {
             return oldItem == newItem
         }
     }

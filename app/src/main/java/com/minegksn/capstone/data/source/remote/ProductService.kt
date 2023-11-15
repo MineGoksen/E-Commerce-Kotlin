@@ -58,7 +58,7 @@ interface ProductService {
 
     @GET("search_product.php")
     suspend fun searchProduct(
-        @Query("query") query: Query
+        @Query("query") query: String
     ): Response<SearchProduct>
 
     @GET("get_categories.php")

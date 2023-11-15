@@ -36,7 +36,11 @@ class CartAdapter(
             fun bind(product: ProductListUI) {
                 with(binding) {
                     tvTitle.text = product.title
-                    tvPrice.text = "${product.price} ₺"
+                    tvPrice.text = if(product.saleState) {
+                        "${product.salePrice} ₺"
+                    } else {
+                        "${product.price} ₺"
+                    }
 
                     Glide.with(ivProduct).load(product.imageOne).into(ivProduct)
 

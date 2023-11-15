@@ -21,21 +21,34 @@ class CartViewModel @Inject constructor(
     private var _cartState = MutableLiveData<CartState>()
     val cartState: LiveData<CartState> get() = _cartState
 
+    private val _totalPriceAmount = MutableLiveData(0.0)
+    val totalPriceAmount: LiveData<Double> = _totalPriceAmount
+
     fun getCartProducts() = viewModelScope.launch {
         _cartState.value = CartState.Loading
 
         _cartState.value = when (val result = productRepository.getCartProducts(authRepository.getUserId())) {
-            is Resource.Success -> CartState.SuccessState(result.data)
+            is Resource.Success -> {
+                _totalPriceAmount.value = result.data.sumOf{
+                    if(it.saleState) it.salePrice
+                    else it.price
+                }
+                CartState.SuccessState(result.data)
+            }
             is Resource.Fail -> CartState.EmptyScreen(result.failMessage)
             is Resource.Error -> CartState.ShowPopUp(result.errorMessage)
         }
+
     }
 
     fun clearAllCart(userId: String) = viewModelScope.launch {
         _cartState.value = CartState.Loading
 
-        _cartState.value = when (val result = productRepository.clearAllCart(userId)) {
-            is Resource.Success -> CartState.SuccessState(emptyList()) // Assuming SuccessState should show an empty list
+        _cartState.value = when (val result = productRepository.clearAllCart(authRepository.getUserId())) {
+            is Resource.Success -> {
+                resetTotalAmount()
+                CartState.SuccessState(emptyList())
+            } // Assuming SuccessState should show an empty list
             is Resource.Fail -> CartState.EmptyScreen(result.failMessage)
             is Resource.Error -> CartState.ShowPopUp(result.errorMessage)
         }
@@ -43,12 +56,20 @@ class CartViewModel @Inject constructor(
 
     fun deleteProductFromCart(productId: Int) = viewModelScope.launch {
         _cartState.value = CartState.Loading
+        _cartState.value = when (val result = productRepository.deleteProductFromCart(authRepository.getUserId(),productId)) {
+            is Resource.Success -> {
+                getCartProducts()
+                resetTotalAmount()
+                CartState.ShowPopUp(result.data.message.toString())
 
-        _cartState.value = when (val result = productRepository.deleteProductFromCart(productId)) {
-            is Resource.Success -> CartState.SuccessState(emptyList()) // Assuming SuccessState should show an empty list
+            }
             is Resource.Fail -> CartState.EmptyScreen(result.failMessage)
             is Resource.Error -> CartState.ShowPopUp(result.errorMessage)
         }
+    }
+
+    private fun resetTotalAmount() {
+        _totalPriceAmount.value = 0.0
     }
 }
 

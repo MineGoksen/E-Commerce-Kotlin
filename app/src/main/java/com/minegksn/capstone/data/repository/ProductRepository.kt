@@ -3,6 +3,7 @@ package com.minegksn.capstone.data.repository
 import com.minegksn.capstone.common.Resource
 import com.minegksn.capstone.data.mapper.mapProductEntityToProductListUI
 import com.minegksn.capstone.data.mapper.mapProductToProductListUI
+import com.minegksn.capstone.data.mapper.mapProductToProductUI
 import com.minegksn.capstone.data.mapper.mapToProductEntity
 import com.minegksn.capstone.data.mapper.mapToProductUI
 import com.minegksn.capstone.data.model.AddToCartRequest
@@ -85,10 +86,10 @@ class ProductRepository(
             }
         }
 
-    suspend fun deleteProductFromCart(productId: Int): Resource<DeleteFromCartResponse> =
+    suspend fun deleteProductFromCart(userId: String, productId: Int): Resource<DeleteFromCartResponse> =
         withContext(Dispatchers.IO) {
             try {
-                val response = productService.deleteFromCart(DeleteFromCartRequest(productId))
+                val response = productService.deleteFromCart(DeleteFromCartRequest(userId, productId))
                 if (response.isSuccessful) {
                     Resource.Success(response.body()!!)
                 } else {
@@ -137,17 +138,34 @@ class ProductRepository(
             }
         }
 
-    suspend fun searchProduct(query: Query): Resource<List<ProductListUI>> =
+    suspend fun searchProduct(query : String): Resource<List<ProductUI>> =
         withContext(Dispatchers.IO) {
             try {
                 val response = productService.searchProduct(query).body()
+                val favorites = productDao.getProductIds()
+
                 if (response?.status == 200) {
-                    Resource.Success(response.products.orEmpty().mapProductToProductListUI())
+                    Resource.Success(response.products.orEmpty().mapProductToProductUI())
                 } else {
                     Resource.Fail(response?.message.orEmpty())
                 }
             } catch (e: Exception) {
                 Resource.Error(e.message.orEmpty())
+            }
+        }
+
+    suspend fun getSaleProducts() : Resource<List<ProductUI>> =
+        withContext(Dispatchers.IO) {
+            try {
+                val response = productService.getSale().body()
+
+                if (response?.status == 200) {
+                    Resource.Success(response.products.orEmpty().mapProductToProductUI())
+                } else {
+                    Resource.Fail(response?.message.orEmpty())
+                }
+            }  catch (e: Exception) {
+                Resource.Error("Something went wrong")
             }
         }
 
