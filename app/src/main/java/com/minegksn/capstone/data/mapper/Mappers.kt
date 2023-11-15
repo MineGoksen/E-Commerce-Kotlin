@@ -29,7 +29,7 @@ fun List<Product>.mapProductToProductListUI() =
             price = it.price ?: 0.0,
             salePrice = it.salePrice ?: 0.0,
             saleState = it.saleState ?: false,
-            imageOne = it.imageOne.orEmpty()
+            imageOne = it.imageOne.orEmpty(),
         )
     }
 

@@ -6,5 +6,5 @@ data class ProductListUI(
     val salePrice: Double,
     val price: Double,
     val imageOne: String,
-    val saleState: Boolean
+    val saleState: Boolean,
 )

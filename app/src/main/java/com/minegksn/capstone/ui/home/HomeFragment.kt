@@ -44,6 +44,11 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             rvProducts.adapter = productAdapter
             rvSaleProducts.adapter = saleAdapter
 
+            ivLogout.setOnClickListener {
+                FirebaseAuth.getInstance().signOut()
+                findNavController().navigate(R.id.homeToLogin)
+            }
+
         }
 
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {

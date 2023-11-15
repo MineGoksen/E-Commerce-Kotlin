@@ -76,7 +76,7 @@
         android:id="@+id/btn_AddToChart"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="80dp"
+        android:layout_marginBottom="84dp"
         android:backgroundTint="@color/darkslategray"
         android:text="Sepete Ekle"
         app:layout_constraintBottom_toBottomOf="parent"

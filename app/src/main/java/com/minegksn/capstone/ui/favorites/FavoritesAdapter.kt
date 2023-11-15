@@ -40,7 +40,7 @@ class FavoritesAdapter(
                 if(!product.saleState) {
                     tvPrice.text = "${product.price} ₺"
                 } else {
-                    tvPrice.text = "ON SALE ${product.salePrice} ₺"
+                    tvPrice.text = "${product.salePrice} ₺"
                 }
 
                 Glide.with(ivProduct).load(product.imageOne).into(ivProduct)

@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.minegksn.capstone.common.Resource
 import com.minegksn.capstone.data.model.AddToCartRequest
+import com.minegksn.capstone.data.model.response.ProductListUI
 import com.minegksn.capstone.data.model.response.ProductUI
 import com.minegksn.capstone.data.repository.ProductRepository
 import com.minegksn.capstone.ui.bag.CartState
@@ -47,6 +48,8 @@ class DetailViewModel @Inject constructor(private val productRepository: Product
             else -> {DetailState.EmptyScreen("Unexpected data type")}
         }
     }
+
+
 }
 
 sealed interface DetailState {

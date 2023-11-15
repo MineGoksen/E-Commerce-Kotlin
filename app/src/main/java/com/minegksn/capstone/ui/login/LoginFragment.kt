@@ -1,6 +1,7 @@
 package com.minegksn.capstone.ui.login
 
 import android.os.Bundle
+import android.text.method.PasswordTransformationMethod
 import androidx.fragment.app.Fragment
 import android.view.View
 import androidx.fragment.app.viewModels
@@ -8,7 +9,9 @@ import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.minegksn.capstone.R
+import com.minegksn.capstone.common.gone
 import com.minegksn.capstone.common.viewBinding
+import com.minegksn.capstone.common.visible
 import com.minegksn.capstone.databinding.FragmentLoginBinding
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.concurrent.TimeUnit
@@ -24,7 +27,7 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
         super.onViewCreated(view, savedInstanceState)
 
         with(binding) {
-
+            etPassword.transformationMethod = PasswordTransformationMethod.getInstance()
             btnSignIn.setOnClickListener {
                 viewModel.signIn(
                     etEmail.text.toString(),
@@ -55,17 +58,15 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
     private fun observeData() = with(binding) {
         viewModel.signInState.observe(viewLifecycleOwner) { state ->
             when (state) {
-                //TODO: Add progress bar.
-                SignInState.Loading -> {
-                    TimeUnit.SECONDS.sleep(1L)
-                }
+                SignInState.Loading -> progressBar.visible()
 
                 is SignInState.GoToHome -> {
-
+                    progressBar.gone()
                     findNavController().navigate(R.id.loginToHome)
                 }
 
                 is SignInState.ShowPopUp -> {
+                    progressBar.gone()
                     Snackbar.make(requireView(), state.errorMessage, 1000).show()
                 }
 

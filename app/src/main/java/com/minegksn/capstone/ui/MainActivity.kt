@@ -31,7 +31,6 @@ class MainActivity : AppCompatActivity() {
                 R.id.favoritesFragment,
                 R.id.bagFragment,
                 R.id.searchFragment,
-                R.id.loginFragment
                 -> {
                     binding.bottomNavigationView2.visible()
                 }

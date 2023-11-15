@@ -30,6 +30,7 @@ class ProductRepository(
         withContext(Dispatchers.IO) {
             try {
                 val response = productService.getProducts().body()
+                val favorites = productDao.getProductIds()
 
                 if (response?.status == 200) {
                     Resource.Success(response.products.orEmpty().mapProductToProductListUI())

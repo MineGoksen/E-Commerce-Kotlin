@@ -16,8 +16,5 @@
         android:id="@+id/searchFragment"
         android:icon="@drawable/ic_search"
         android:title="Arama" />
-    <item
-        android:id="@+id/loginFragment"
-        android:icon="@drawable/ic_log_out"
-        android:title="Çıkış Yap" />
+
 </menu>
